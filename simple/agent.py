@@ -69,8 +69,9 @@ def generate_answer(sql_result, user_query: str) -> str:
 
     prompt = (
         "From the query result "
-        "Question: \"{user_query}\". "
         "Use the value here to answer in human language: {result_str} "
+        "Question: \"{user_query}\". "
+        "Answer:"
     ).format(user_query=user_query, result_str=result_str)
 
     print("\n++++++++++++++++++++++++\n")
