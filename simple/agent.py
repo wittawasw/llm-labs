@@ -60,6 +60,32 @@ def execute_query(sql_query: str):
 
     return result
 
+def generate_answer(sql_result, user_query: str) -> str:
+    """
+    Uses the LLM to prepare a human-friendly answer based on the SQL query result.
+    """
+
+    result_str = str(sql_result)
+
+    prompt = (
+        "From the query result "
+        "Question: \"{user_query}\". "
+        "Use the value here to answer in human language: {result_str} "
+    ).format(user_query=user_query, result_str=result_str)
+
+    print("\n++++++++++++++++++++++++\n")
+    print("Promt:\n", prompt)
+    print("++++++++++++++++++++++++\n")
+
+    response = llm(
+        prompt,
+        max_tokens=150,
+        temperature=0.2,
+        stop=["\n\n"]
+    )
+    answer = response["choices"][0]["text"].strip()
+    return answer
+
 def main():
     """
     Main execution flow.
@@ -76,6 +102,11 @@ def main():
         print("\n===================\n")
         result = execute_query(sql_query)
         print("✅ Query Result:", result)
+
+        answer = generate_answer(result, user_query)
+        print("\n===================\n")
+        print("✅ Final Answer:", answer)
+
     except ValueError as e:
         print(f"❌ Error: {e}")
 
