@@ -1,3 +1,7 @@
+# LLM labs
+
+## Setup
+
 ```sh
-pip install llama-cpp-python
+pip install -r requirements.txt
 ```

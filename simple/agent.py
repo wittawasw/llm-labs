@@ -2,7 +2,6 @@ from llama_cpp import Llama
 import sqlite3
 import re
 
-# Load LLM model once (better performance)
 llm = Llama(model_path="./models/codellama-7b.Q8_0.gguf", n_ctx=512)
 
 def generate_sql(natural_query: str) -> str:
@@ -21,16 +20,15 @@ def generate_sql(natural_query: str) -> str:
 
     response = llm(
         prompt,
-        max_tokens=150,  # Ensures full query generation
+        max_tokens=150,
         temperature=0.2,
         stop=["\n\n", ";"]  # Force stopping at query completion
     )
 
     raw_response = response["choices"][0]["text"].strip()
 
-    print(f"\n🔍 **Raw LLM Response:**\n{raw_response}")  # Debugging output
+    print(f"\n🔍 **Raw LLM Response:**\n{raw_response}")
 
-    # Ensure only valid SQL is extracted
     match = re.search(r"SELECT .*", raw_response, re.DOTALL | re.IGNORECASE)
     if match:
         sql_query = match.group(0).strip()
