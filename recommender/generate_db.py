@@ -1,9 +1,6 @@
 import sqlite3
 
 def create_db():
-    """
-    Creates a database for tracking personal intake of medications and supplements.
-    """
     conn = sqlite3.connect("./db/health.db")
     cursor = conn.cursor()
     cursor.execute("""

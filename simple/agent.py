@@ -5,9 +5,6 @@ import re
 llm = Llama(model_path="./models/codellama-7b.Q8_0.gguf", n_ctx=512)
 
 def generate_sql(natural_query: str) -> str:
-    """
-    Converts a natural language query into an SQL query using a local LLM.
-    """
     prompt = (
         "You are an expert SQL generator. "
         "Generate a SQL query for the following request. "
@@ -38,9 +35,6 @@ def generate_sql(natural_query: str) -> str:
     return sql_query
 
 def execute_query(sql_query: str):
-    """
-    Executes an SQL query on the SQLite database.
-    """
     print("\n++++++++++++++++++++++++\n")
     print("Executing SQL Query:\n", sql_query)
     print("++++++++++++++++++++++++\n")
@@ -59,10 +53,6 @@ def execute_query(sql_query: str):
     return result
 
 def generate_answer(sql_result, user_query: str) -> str:
-    """
-    Uses the LLM to prepare a human-friendly answer based on the SQL query result.
-    """
-
     result_str = str(sql_result)
 
     prompt = (
@@ -86,9 +76,6 @@ def generate_answer(sql_result, user_query: str) -> str:
     return answer
 
 def main():
-    """
-    Main execution flow.
-    """
     print("===================\n")
     user_query = "Can you give me the name of the client who got the most expensive receipt?"
     print("Natural Language Query:", user_query)
