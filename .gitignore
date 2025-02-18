@@ -1,2 +1,5 @@
 models
 db
+
+# python
+__pycache__
