@@ -17,7 +17,7 @@ def recommend_supplements():
         "Recommendations:"
     )
 
-    # max_tokens 300 and temperature 0.2 was not enough to generate output.
+    # max_tokens 300 and temperature 0.2 is not enough to generate output.
     # It always return empty response in Med-LLaMa3-8B
     response = llm(
         prompt,
