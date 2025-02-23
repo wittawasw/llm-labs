@@ -12,25 +12,15 @@ def get_embedding(text):
 
 def retrieve_supplements(query):
     index = faiss.read_index("./db/recommender_rag/supplement_index.faiss")
-    supplement_ids = np.load("./db/recommender_rag/supplement_ids.npy")
+    supplement_data = np.load("./db/recommender_rag/supplement_data.npy", allow_pickle=True)
 
     query_embedding = get_embedding(query)
     distances, indices = index.search(np.array([query_embedding]), k=3)
-
-    conn = sqlite3.connect("./db/recommender_rag.db")
-    cursor = conn.cursor()
 
     retrieved_supplements = []
     for idx in indices[0]:
         if idx == -1:
             continue
-        supplement_id = supplement_ids[idx]
-        cursor.execute("SELECT name, description, benefits FROM supplements WHERE id=?", (supplement_id,))
-        result = cursor.fetchone()
+        retrieved_supplements.append(supplement_data[idx])
 
-        if result:
-            retrieved_supplements.append(result)
-
-    conn.close()
-
-    return retrieved_supplements if retrieved_supplements else []
+    return retrieved_supplements

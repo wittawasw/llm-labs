@@ -14,26 +14,26 @@ def build_faiss_index():
     conn = sqlite3.connect("./db/recommender_rag.db")
     cursor = conn.cursor()
 
-    cursor.execute("SELECT id, name, description, benefits FROM supplements")
+    cursor.execute("SELECT id, name, description, benefits, price, stock_quantity FROM supplements")
     supplements = cursor.fetchall()
 
     dimension = 384
     index = faiss.IndexFlatL2(dimension)
-    supplement_ids = []
+    supplement_data = []
     embeddings = []
 
     for supp in supplements:
         text = f"{supp[1]}: {supp[2]} Benefits: {supp[3]}"
         embedding = get_embedding(text)
         embeddings.append(embedding)
-        supplement_ids.append(supp[0])
+        supplement_data.append((supp[0], supp[1], supp[4], supp[5]))
 
     index.add(np.array(embeddings, dtype=np.float32))
     faiss.write_index(index, "./db/recommender_rag/supplement_index.faiss")
-    np.save("./db/recommender_rag/supplement_ids.npy", np.array(supplement_ids))
+    np.save("./db/recommender_rag/supplement_data.npy", np.array(supplement_data, dtype=object))
 
     conn.close()
-    print("FAISS index built and saved.")
+    print("FAISS index with supplement data built and saved.")
 
 if __name__ == "__main__":
     build_faiss_index()

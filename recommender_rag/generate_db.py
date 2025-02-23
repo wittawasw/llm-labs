@@ -22,7 +22,9 @@ def create_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
             description TEXT,
-            benefits TEXT
+            benefits TEXT,
+            price FLOAT,
+            stock_quantity INTEGER
         )
     """)
 
@@ -46,8 +48,8 @@ def create_db():
     ]
 
     sample_supplements = [
-        ("Vitamin C", "An essential vitamin for immunity.", "Boosts immune system, antioxidant."),
-        ("Omega-3", "Essential fatty acids from fish oil.", "Supports heart health, brain function.")
+        ("Vitamin C", "An essential vitamin for immunity.", "Boosts immune system, antioxidant.", 100.0, 30),
+        ("Omega-3", "Essential fatty acids from fish oil.", "Supports heart health, brain function.", 250.0, 20)
     ]
 
     sample_intake = [
@@ -59,7 +61,7 @@ def create_db():
         cursor.execute("INSERT INTO medications (commercial_name, dosage, price, stock_quantity, ingredients) VALUES (?, ?, ?, ?, ?)", med)
 
     for supp in sample_supplements:
-        cursor.execute("INSERT INTO supplements (name, description, benefits) VALUES (?, ?, ?)", supp)
+        cursor.execute("INSERT INTO supplements (name, description, benefits, price, stock_quantity) VALUES (?, ?, ?, ?, ?)", supp)
 
     for intake in sample_intake:
         cursor.execute("INSERT INTO intake (substance_name, dosage, frequency, purpose, medication_id, intake_datetime) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)", intake)
@@ -69,4 +71,4 @@ def create_db():
 
 if __name__ == "__main__":
     create_db()
-    print("Database created with tables and sample data.")
+    print("Database created with tables and sample data including price and stock quantity.")
