@@ -26,7 +26,11 @@ def retrieve_supplements(query):
             continue
         supplement_id = supplement_ids[idx]
         cursor.execute("SELECT name, description, benefits FROM supplements WHERE id=?", (supplement_id,))
-        retrieved_supplements.append(cursor.fetchone())
+        result = cursor.fetchone()
+
+        if result:
+            retrieved_supplements.append(result)
 
     conn.close()
-    return retrieved_supplements
+
+    return retrieved_supplements if retrieved_supplements else []
