@@ -17,7 +17,7 @@ def retrieve_supplements(query):
     supplement_data = np.load("./db/recommender_rag/supplement_data.npy", allow_pickle=True)
 
     query_embedding = get_embedding(query)
-    distances, indices = index.search(np.array([query_embedding]), k=3)
+    _, indices = index.search(np.array([query_embedding]), k=3)
 
     retrieved_supplements = []
     for idx in indices[0]:
