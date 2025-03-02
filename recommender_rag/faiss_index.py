@@ -19,7 +19,8 @@ def build_faiss_index():
     cursor.execute("SELECT id, name, description, benefits, price, stock_quantity FROM supplements")
     supplements = cursor.fetchall()
 
-    dimension = 384
+    # dimension = 384
+    dimension = 1024
     index = faiss.IndexFlatL2(dimension)
     supplement_data = []
     embeddings = []
