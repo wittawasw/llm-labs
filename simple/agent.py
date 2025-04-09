@@ -2,7 +2,9 @@ from llama_cpp import Llama
 import sqlite3
 import re
 
-llm = Llama(model_path="./models/codellama-7b.Q8_0.gguf", n_ctx=512)
+# llm = Llama(model_path="./models/codellama-7b.Q8_0.gguf", n_ctx=512)
+llm = Llama(model_path="./models/Meta-Llama-3.1-8B-Q8_0.gguf", n_ctx=512)
+
 
 def generate_sql(natural_query: str) -> str:
     prompt = (
