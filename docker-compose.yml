@@ -19,7 +19,7 @@ services:
         soft: 65536
         hard: 65536
     volumes:
-      - opensearch-data1:/usr/share/opensearch/data
+      - ./db/opensearch:/usr/share/opensearch/data
     ports:
       - 9200:9200
       - 9600:9600
@@ -35,9 +35,6 @@ services:
       OPENSEARCH_HOSTS: '["https://opensearch-node1:9200"]'
     networks:
       - opensearch-net
-
-volumes:
-  opensearch-data1:
 
 networks:
   opensearch-net:
