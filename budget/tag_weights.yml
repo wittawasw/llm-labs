@@ -1,0 +1,71 @@
+high_suspicion:
+  aggregate_cross_ministry_heavy:
+    weight: 8.0
+    description: "Same project/item appears across more than 5 ministries with total budget > 10M THB"
+  duplicated_across_units_under_500k:
+    weight: 7.5
+    description: "Same vague item under 500k appears in 10 or more different budgetary units"
+  repeated_same_output_no_specifics:
+    weight: 7.0
+    description: "Same OUTPUT reused with vague item text across 10 or more entries"
+  mass_small_fragments:
+    weight: 6.5
+    description: "Same budget plan split into 30 or more fragments with low individual amounts"
+  multi_ministry_same_item_same_year:
+    weight: 6.0
+    description: "Same item for same year found in 4 or more ministries"
+  no_output_high_amount:
+    weight: 5.5
+    description: "Budget over 5M with no OUTPUT or PROJECT defined"
+  budget_clustered_one_org:
+    weight: 5.0
+    description: "Over 30 similar-named projects clustered under a single budgetary unit"
+
+moderate_concern:
+  common_vague_item_mass:
+    weight: 4.8
+    description: "Generic items like 'ค่าใช้จ่าย', 'ดำเนินงาน' appear frequently across units"
+  nested_category_bloat:
+    weight: 4.5
+    description: "Category nesting is too deep (5+ levels) with vague labels"
+  same_item_duplicate_output:
+    weight: 4.2
+    description: "Same item description appears with different output text only"
+  low_amount_frequent:
+    weight: 4.0
+    description: "Same item under 500k repeated in 5 or more different units"
+  duplicate_project_diff_year:
+    weight: 3.8
+    description: "Same project reused for multiple years with only minor variation"
+  frequent_loose_label:
+    weight: 3.5
+    description: "Loose category names like 'อื่นๆ', 'ทั่วไป', 'เบ็ดเตล็ด'"
+  multi_plan_same_output:
+    weight: 3.2
+    description: "Different budget plans share the same vague OUTPUT"
+  empty_output_with_category:
+    weight: 3.0
+    description: "No output or project name but detailed category breakdown present"
+
+low_priority_flags:
+  short_item_name:
+    weight: 2.5
+    description: "Item description shorter than 10 characters"
+  low_info_density:
+    weight: 2.3
+    description: "Only 3–4 non-null informative fields in entry"
+  plan_used_across_units:
+    weight: 2.0
+    description: "Same budget plan reused across 10 or more budgetary units"
+  redundant_crossfunc_flag:
+    weight: 1.8
+    description: "cross_func is TRUE but appears only in single ministry"
+  same_fiscal_redundancy:
+    weight: 1.5
+    description: "Same fiscal_year used repeatedly in similar contexts without change"
+  very_low_budget_noise:
+    weight: 1.2
+    description: "Budget under 100k with vague or generic description"
+  possible_copy_paste_labeling:
+    weight: 1.0
+    description: "Category structure appears copy-pasted across multiple unrelated records"
