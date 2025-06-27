@@ -11,3 +11,9 @@ pip install -r requirements.txt
 - [mradermacher/MedLLaMA-3-GGU](https://huggingface.co/mradermacher/MedLLaMA-3-GGUF)
 - [mradermacher/Med-Qwen2-7B-GGUF](https://huggingface.co/mradermacher/Med-Qwen2-7B-GGUF)
 - [unsloth/medgemma-4b-it-GGUF](https://huggingface.co/unsloth/medgemma-4b-it-GGUF)
+
+## HF Login
+
+```sh
+huggingface-cli login
+```

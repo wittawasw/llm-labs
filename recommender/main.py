@@ -1,5 +1,6 @@
 from intake import fetch_intake
-from recommender import recommend_supplements
+# from recommender import recommend_supplements
+from recommender_gemma import recommend_supplements
 
 def main():
     print("===================\n")
