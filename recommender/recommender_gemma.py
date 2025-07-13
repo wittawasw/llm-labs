@@ -34,7 +34,7 @@ def generate_recommendation_prompt(intake_text):
     Based on the following supplement intake history, recommend 3–5 additional supplements that are beneficial, avoiding overdose or conflict.
 
     Return exactly one JSON object. No explanations, no extra output.
-    DO NOT put it inside markdown ```json json```. NEVER.
+    DO NOT put it inside markdown ```json ```. NEVER.
 
     Only return output in this format:
     {{
@@ -46,14 +46,17 @@ def generate_recommendation_prompt(intake_text):
     """.strip()
 
 def extract_recommendations(json_text):
-    decoder = json.JSONDecoder()
-    json_text = json_text.lstrip()
+    # decoder = json.JSONDecoder()
+    # json_text = json_text.lstrip()
+    # Even with prompt to not return Markdown, Gemma still ALWAYS return Markdown.
+    cleaned = json_text.replace("```json", "").replace("```", "").strip()
+    cleaned = cleaned.replace("``", "")
 
     try:
-        obj, _ = decoder.raw_decode(json_text)
+        # obj, _ = decoder.raw_decode(json_text)
         # json_text = clean_json_text(json_text)
-        # return json.loads(json_text)["recommendations"]
-        return obj["recommendations"]
+        return json.loads(cleaned)["recommendations"]
+        # return obj["recommendations"]
     except Exception as e:
         print("Failed JSON:\n", json_text)
         print("\n\nEnd Failed JSON:\n")
@@ -94,16 +97,30 @@ def generate_cost_prompt(price_lines):
         "\n\nEstimate total monthly cost and suggest optimal usage duration. Keep it practical and short."
     )
 
-def run_llm(prompt, max_new_tokens=256):
-    output = llm(prompt, max_new_tokens=max_new_tokens, temperature=0.7, top_p=0.9)[0]["generated_text"]
-    return output[len(prompt):].strip()
+def run_llm(prompt, max_new_tokens=512):
+    raw = llm(
+        prompt,
+        max_new_tokens=max_new_tokens,
+        temperature=0.7,
+        top_p=0.9
+    )[0]["generated_text"]
+
+    gen = raw[len(prompt):]
+
+    end_idx = gen.find("```\n")
+    if end_idx != -1:
+        gen = gen[:end_idx + 2]
+
+    return gen.strip()
+
+import time
 
 def recommend_supplements():
-    start = time.time()
+    start = time.perf_counter()
     try:
         intake_text = get_intake_text()
         prompt_1 = generate_recommendation_prompt(intake_text)
-        json_text = run_llm(prompt_1, max_new_tokens=512)
+        json_text = run_llm(prompt_1)
         recommendations = extract_recommendations(json_text)
 
         names = [r["name"] for r in recommendations]
@@ -111,13 +128,16 @@ def recommend_supplements():
         price_lines = build_price_lines(recommendations, price_map)
 
         prompt_2 = generate_cost_prompt(price_lines)
-        cost_summary = run_llm(prompt_2, max_new_tokens=512)
+        cost_summary = run_llm(prompt_2)
 
         result = "\n".join(price_lines) + "\n\nCost Estimate:\n" + cost_summary
     except Exception as e:
         result = f"Error: {e}"
 
-    duration = int(time.time() - start)
-    timelapse = f"\n\nTime elapsed: {duration // 60}:{str(duration % 60).zfill(2)}"
+    duration = time.perf_counter() - start
 
+    minutes = int(duration // 60)
+    seconds = int(duration % 60)
+
+    timelapse = f"\n\nTime elapsed: {minutes}:{str(seconds).zfill(2)}"
     return result + timelapse
