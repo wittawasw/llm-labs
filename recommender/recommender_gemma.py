@@ -46,9 +46,14 @@ def generate_recommendation_prompt(intake_text):
     """.strip()
 
 def extract_recommendations(json_text):
+    decoder = json.JSONDecoder()
+    json_text = json_text.lstrip()
+
     try:
+        obj, _ = decoder.raw_decode(json_text)
         # json_text = clean_json_text(json_text)
-        return json.loads(json_text)["recommendations"]
+        # return json.loads(json_text)["recommendations"]
+        return obj["recommendations"]
     except Exception as e:
         print("Failed JSON:\n", json_text)
         print("\n\nEnd Failed JSON:\n")
@@ -89,7 +94,7 @@ def generate_cost_prompt(price_lines):
         "\n\nEstimate total monthly cost and suggest optimal usage duration. Keep it practical and short."
     )
 
-def run_llm(prompt, max_new_tokens=512):
+def run_llm(prompt, max_new_tokens=256):
     output = llm(prompt, max_new_tokens=max_new_tokens, temperature=0.7, top_p=0.9)[0]["generated_text"]
     return output[len(prompt):].strip()
 
@@ -98,7 +103,7 @@ def recommend_supplements():
     try:
         intake_text = get_intake_text()
         prompt_1 = generate_recommendation_prompt(intake_text)
-        json_text = run_llm(prompt_1, max_new_tokens=2048)
+        json_text = run_llm(prompt_1, max_new_tokens=512)
         recommendations = extract_recommendations(json_text)
 
         names = [r["name"] for r in recommendations]
@@ -106,7 +111,7 @@ def recommend_supplements():
         price_lines = build_price_lines(recommendations, price_map)
 
         prompt_2 = generate_cost_prompt(price_lines)
-        cost_summary = run_llm(prompt_2, max_new_tokens=2048)
+        cost_summary = run_llm(prompt_2, max_new_tokens=512)
 
         result = "\n".join(price_lines) + "\n\nCost Estimate:\n" + cost_summary
     except Exception as e:
