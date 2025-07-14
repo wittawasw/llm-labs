@@ -94,7 +94,9 @@ def generate_cost_prompt(price_lines):
     return (
         "Here are supplement recommendations and their prices:\n\n" +
         "\n".join(price_lines) +
-        "\n\nEstimate total monthly cost and suggest optimal usage duration. Keep it practical and short."
+        "\n\nEstimate total monthly cost and suggest optimal usage duration. Keep it practical and short." +
+        "\n\nYou are an assistant program inside a dietician computer" +
+        "\n Be concise with recommendation in an output as if a talk or short note between practitioners."
     )
 
 def run_llm(prompt, max_new_tokens=512):
